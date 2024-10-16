@@ -1,0 +1,52 @@
+
+
+services:
+  app:
+    container_name: 'api_carros'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # image: especializati/laravel-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./:/var/www
+    networks:
+      - carros
+   
+
+  nginx:
+    container_name: 'nginx_carros'
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - ./:/var/www
+      - ./deployment/nginx/laravel.local.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - carros
+
+  mysql:
+    container_name: mysql_carros
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - carros
+
+networks:
+  carros:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  

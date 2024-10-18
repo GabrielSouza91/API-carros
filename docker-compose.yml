@@ -28,18 +28,18 @@ services:
     networks:
       - carros
 
-  mysql:
-    container_name: mysql_carros
-    image: mysql:latest
+  postgres:
+    container_name: postgres_carros
+    image: postgres:16
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - "3306:3306"
+      - "5432:5432"
     networks:
       - carros
 
@@ -48,5 +48,5 @@ networks:
     driver: bridge
 
 volumes:
-  mysql_data:
+  postgres_data:
   
